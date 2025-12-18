@@ -1,0 +1,127 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    CARBON-AWARE EXECUTION INTELLIGENCE                        ║
+║                         System Architecture                                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                          LAYER 1: AI WORKLOADS                               │
+│                                                                              │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐                 │
+│  │   Fraud      │    │   Sales      │    │ Forecasting  │                 │
+│  │  Detection   │    │   Report     │    │   Model      │                 │
+│  │              │    │              │    │              │                 │
+│  │ Runs: 1h     │    │ Runs: 24h    │    │ Runs: 2h     │                 │
+│  │ Needs: 2h    │    │ Needs: 24h   │    │ Needs: 6h    │                 │
+│  └──────────────┘    └──────────────┘    └──────────────┘                 │
+│                                                                              │
+│  Production AI models running in enterprise environment                     │
+└────────────────────────────────────┬─────────────────────────────────────────┘
+                                     │
+                                     │ Execution Data
+                                     │ (frequency, emissions, metadata)
+                                     ↓
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                    LAYER 2: EXECUTION CONTEXT                                │
+│                                                                              │
+│  Captures WHY workloads run:                                                  │
+│  • Business criticality (critical, high, medium, low)                       │
+│  • Urgency (real-time, urgent, normal, batch, deferrable)                  │
+│  • SLA requirements (acceptable delay window)                                │
+│  • Current vs Required frequency                                            │
+│                                                                              │
+│  Example Context:                                                            │
+│  ┌────────────────────────────────────────────────────────┐                │
+│  │ Workload: fraud_detection_v2                           │                │
+│  │ Current: Runs every 1 hour                              │                │
+│  │ Required: Must run within 2 hours                      │                │
+│  │ Criticality: HIGH                                       │                │
+│  │ Urgency: URGENT                                         │                │
+│  └────────────────────────────────────────────────────────┘                │
+└────────────────────────────────────┬─────────────────────────────────────────┘
+                                     │
+                                     │ Context + Metrics
+                                     ↓
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                  LAYER 3: CARBON OBSERVABILITY                               │
+│                                                                              │
+│  Measures WHAT workloads cost environmentally:                              │
+│  • CO₂ emissions per execution (kg)                                        │
+│  • Energy consumption (kWh)                                                  │
+│  • Execution duration                                                        │
+│  • Resource usage (CPU/GPU/Memory)                                          │
+│                                                                              │
+│  Example Measurement:                                                       │
+│  ┌────────────────────────────────────────────────────────┐                │
+│  │ Emissions per run: 0.001 kg CO₂                        │                │
+│  │ Energy: 0.0005 kWh                                      │                │
+│  │ Duration: 45 seconds                                    │                │
+│  └────────────────────────────────────────────────────────┘                │
+└────────────────────────────────────┬─────────────────────────────────────────┘
+                                     │
+                                     │ Analysis Request
+                                     ↓
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                    LAYER 4: AGENTIC REASONING                                │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │                    STEP 1: OBSERVE                                   │  │
+│  │  • Collect workload data                                             │  │
+│  │  • Get current frequency vs required frequency                      │  │
+│  │  • Retrieve emission metrics                                         │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+│                                    ↓                                         │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │                    STEP 2: ANALYZE                                   │  │
+│  │  • Compare: current_frequency < required_frequency?                 │  │
+│  │  • Calculate: runs/day (current vs optimal)                         │  │
+│  │  • Identify: Over-serving pattern?                                   │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+│                                    ↓                                         │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │                    STEP 3: REASON                                    │  │
+│  │  • Evaluate business risk                                            │  │
+│  │  • Calculate emission reduction potential                            │  │
+│  │  • Assess SLA compliance margin                                      │  │
+│  │  • Determine confidence level                                        │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+│                                    ↓                                         │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │                    STEP 4: RECOMMEND                                 │  │
+│  │  • Generate actionable suggestion                                    │  │
+│  │  • Provide clear rationale                                           │  │
+│  │  • Estimate impact (kg CO₂ saved)                                  │  │
+│  │  • Assess business risk                                              │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────┬─────────────────────────────────────────┘
+                                     │
+                                     │ Recommendation
+                                     ↓
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                    LAYER 5: RECOMMENDATION OUTPUT                            │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  ⚠️  OPTIMIZATION OPPORTUNITY                                        │  │
+│  │                                                                      │  │
+│  │  Workload: fraud_detection_v2                                        │  │
+│  │  Current: Runs every 1.0 hours                                      │  │
+│  │  Recommended: Run every 2.0 hours                                   │  │
+│  │                                                                      │  │
+│  │  Impact:                                                             │  │
+│  │  • 0.012 kg CO₂ saved per day                                       │  │
+│  │  • 50% emission reduction                                           │  │
+│  │  • Maintains SLA compliance                                         │  │
+│  │                                                                      │  │
+│  │  Risk: LOW                                                          │  │
+│  │  Confidence: HIGH                                                   │  │
+│  │                                                                      │  │
+│  │  [Human Engineer Reviews] → [Approve/Modify/Dismiss]               │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  Human-in-the-loop: All recommendations require human approval              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  KEY PRINCIPLE: Carbon participates in execution decisions BEFORE energy     ║
+║  is consumed, not after it's reported.                                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+

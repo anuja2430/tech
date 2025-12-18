@@ -1,0 +1,156 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    AGENTIC REASONING FLOW                                    ║
+║              How the Agent Thinks and Recommends                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+START
+ │
+ ├─────────────────────────────────────────────────────────────────┐
+ │                                                                 │
+ │  [STEP 1: REGISTER WORKLOAD]                                    │
+ │  ┌─────────────────────────────────────────────────────────┐   │
+ │  │ Input:                                                   │   │
+ │  │ • workload_name: "fraud_detection_v2"                   │   │
+ │  │ • current_frequency_hours: 1.0                          │   │
+ │  │ • required_frequency_hours: 2.0                         │   │
+ │  │ • emissions_per_run_kg: 0.001                            │   │
+ │  └─────────────────────────────────────────────────────────┘   │
+ │                                                                 │
+ └────────────────────────────┬────────────────────────────────────┘
+                              │
+                              ↓
+ ┌─────────────────────────────────────────────────────────────────┐
+ │                                                                 │
+ │  [STEP 2: ANALYZE WORKLOAD]                                     │
+ │                                                                 │
+ │  ┌─────────────────────────────────────────────────────────┐  │
+ │  │ 2a. CHECK OVER-SERVING                                   │  │
+ │  │                                                          │  │
+ │  │    IF current_frequency < required_frequency:           │  │
+ │  │        → OVER-SERVING = TRUE                            │  │
+ │  │        → Optimization opportunity found!                │  │
+ │  │    ELSE:                                                 │  │
+ │  │        → OVER-SERVING = FALSE                           │  │
+ │  │        → Already optimized                               │  │
+ │  │                                                          │  │
+ │  │    Example:                                              │  │
+ │  │    current = 1.0h, required = 2.0h                      │  │
+ │  │    → 1.0 < 2.0 → TRUE → OVER-SERVING                   │  │
+ │  └─────────────────────────────────────────────────────────┘  │
+ │                              ↓                                  │
+ │  ┌─────────────────────────────────────────────────────────┐  │
+ │  │ 2b. CALCULATE SAVINGS                                    │  │
+ │  │                                                          │  │
+ │  │    IF over-serving:                                     │  │
+ │  │        current_runs_per_day = 24 ÷ current_frequency   │  │
+ │  │        optimal_runs_per_day = 24 ÷ required_frequency  │  │
+ │  │        reduction = current - optimal                   │  │
+ │  │        savings_kg_per_day = reduction × emissions       │  │
+ │  │        savings_percent = (reduction ÷ current) × 100   │  │
+ │  │                                                          │  │
+ │  │    Example:                                              │  │
+ │  │    current_runs = 24 ÷ 1.0 = 24 runs/day               │  │
+ │  │    optimal_runs = 24 ÷ 2.0 = 12 runs/day              │  │
+ │  │    reduction = 24 - 12 = 12 runs/day                   │  │
+ │  │    savings = 12 × 0.001 = 0.012 kg CO₂/day            │  │
+ │  │    savings_percent = (12 ÷ 24) × 100 = 50%            │  │
+ │  └─────────────────────────────────────────────────────────┘  │
+ │                              ↓                                  │
+ │  ┌─────────────────────────────────────────────────────────┐  │
+ │  │ 2c. ASSESS BUSINESS RISK                                │  │
+ │  │                                                          │  │
+ │  │    margin = required_frequency - current_frequency     │  │
+ │  │    margin_ratio = margin ÷ required_frequency         │  │
+ │  │                                                          │  │
+ │  │    IF margin_ratio > 0.3:                              │  │
+ │  │        → Risk = LOW                                     │  │
+ │  │    ELIF margin_ratio > 0.1:                            │  │
+ │  │        → Risk = MEDIUM                                 │  │
+ │  │    ELSE:                                                 │  │
+ │  │        → Risk = HIGH (don't recommend)                 │  │
+ │  │                                                          │  │
+ │  │    Example:                                              │  │
+ │  │    margin = 2.0 - 1.0 = 1.0 hour                       │  │
+ │  │    margin_ratio = 1.0 ÷ 2.0 = 0.5 (50%)               │  │
+ │  │    → 0.5 > 0.3 → Risk = LOW                            │  │
+ │  └─────────────────────────────────────────────────────────┘  │
+ │                                                                 │
+ └────────────────────────────┬────────────────────────────────────┘
+                              │
+                              ↓
+ ┌─────────────────────────────────────────────────────────────────┐
+ │                                                                 │
+ │  [STEP 3: GENERATE RECOMMENDATION]                              │
+ │                                                                 │
+ │  ┌─────────────────────────────────────────────────────────┐  │
+ │  │ IF over-serving AND risk is LOW/MEDIUM:                │  │
+ │  │                                                          │  │
+ │  │    recommendation = {                                    │  │
+ │  │        "status": "optimization_opportunity",             │  │
+ │  │        "current": "Runs every X hours",                 │  │
+ │  │        "recommended": "Run every Y hours",              │  │
+ │  │        "savings_kg_per_day": calculated_savings,        │  │
+ │  │        "savings_percent": calculated_percent,           │  │
+ │  │        "message": "Clear explanation"                   │  │
+ │  │    }                                                     │  │
+ │  │                                                          │  │
+ │  │ ELSE:                                                    │  │
+ │  │    recommendation = {                                    │  │
+ │  │        "status": "optimized",                            │  │
+ │  │        "message": "Already aligned with requirements"   │  │
+ │  │    }                                                     │  │
+ │  └─────────────────────────────────────────────────────────┘  │
+ │                                                                 │
+ └────────────────────────────┬────────────────────────────────────┘
+                              │
+                              ↓
+ ┌─────────────────────────────────────────────────────────────────┐
+ │                                                                 │
+ │  [STEP 4: OUTPUT RECOMMENDATION]                                │
+ │                                                                 │
+ │  ┌─────────────────────────────────────────────────────────┐  │
+ │  │  ⚠️  OPTIMIZATION OPPORTUNITY                           │  │
+ │  │                                                          │  │
+ │  │  Workload: fraud_detection_v2                            │  │
+ │  │  Current: Runs every 1.0 hours                          │  │
+ │  │  Recommended: Run every 2.0 hours                       │  │
+ │  │                                                          │  │
+ │  │  Potential Savings:                                     │  │
+ │  │  • 0.012 kg CO₂ per day                                │  │
+ │  │  • 50% reduction in emissions                          │  │
+ │  │  • Maintains SLA compliance                            │  │
+ │  │                                                          │  │
+ │  │  Business Risk: LOW                                    │  │
+ │  └─────────────────────────────────────────────────────────┘  │
+ │                                                                 │
+ └────────────────────────────┬────────────────────────────────────┘
+                              │
+                              ↓
+ ┌─────────────────────────────────────────────────────────────────┐
+ │                                                                 │
+ │  [STEP 5: HUMAN REVIEW]                                         │
+ │                                                                 │
+ │  ┌─────────────────────────────────────────────────────────┐  │
+ │  │  Engineer receives recommendation:                      │  │
+ │  │                                                          │  │
+ │  │  Options:                                                │  │
+ │  │  [✓] APPROVE → Implement change                         │  │
+ │  │  [✎] MODIFY → Adjust recommendation                     │  │
+ │  │  [✗] DISMISS → Keep current configuration               │  │
+ │  │                                                          │  │
+ │  │  System does NOT auto-apply changes                     │  │
+ │  │  Human always in control                                │  │
+ │  └─────────────────────────────────────────────────────────┘  │
+ │                                                                 │
+ └────────────────────────────┬────────────────────────────────────┘
+                              │
+                              ↓
+                            END
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  KEY INSIGHT: The agent doesn't just report data - it REASONS through        ║
+║  optimization opportunities and SUGGESTS specific actions with clear        ║
+║  rationale. This is what makes it "agentic" - active reasoning, not          ║
+║  passive reporting.                                                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+

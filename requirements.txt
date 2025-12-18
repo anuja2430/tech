@@ -1,0 +1,26 @@
+# Core dependencies
+# Note: Python 3.8+ is required (check with python --version)
+
+# Carbon tracking
+codecarbon>=2.3.0
+
+# Agentic reasoning
+langchain>=0.1.0
+langchain-openai>=0.0.5
+
+# Dashboard
+streamlit>=1.28.0
+plotly>=5.17.0
+pandas>=2.1.0
+
+# Data handling
+numpy>=1.24.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Utilities
+python-dotenv>=1.0.0
+pyyaml>=6.0.1
+
