@@ -165,13 +165,3 @@ Recommendation:
 pytest tests/
 ```
 
-## 📝 License
-
-This project is part of Tech Mahindra Green IT Software Engineering Internship submission.
-
-## 👤 Author
-
-**Anuja**  
-B.Tech Engineering  
-Tech Mahindra Internship Program
-
